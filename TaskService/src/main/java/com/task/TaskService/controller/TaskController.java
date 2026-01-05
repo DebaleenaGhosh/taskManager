@@ -32,21 +32,21 @@ public class TaskController
         return new ResponseEntity<>(taskServiceResponse.getHttpStatus());
     }
 
-    @GetMapping()
+    @GetMapping("/taskList")
     public ResponseEntity<List<TaskServiceResponse>> getAllListOfTasksByUserId(@RequestHeader("X-User-Id") Long userId)
     {
         List<TaskServiceResponse> listTasks = taskService.getAllTasksByUserId(userId);
         return new ResponseEntity<>(listTasks, HttpStatus.OK);
     }
 
-    @GetMapping("/taskId")
+    @GetMapping("/{taskId}")
     public ResponseEntity<TaskServiceResponse> getTaskByTaskId(@RequestHeader("X-User-Id") Long userId, @PathVariable Long taskId)
     {
         TaskServiceResponse task = taskService.getTaskByTaskId(taskId);
         return new ResponseEntity<>(task, task.getHttpStatus());
     }
 
-    @PutMapping()
+    @PutMapping("/updateTask")
     public ResponseEntity<TaskServiceResponse> updateTask(@RequestHeader("X-User-Id") Long userId, @RequestBody TaskServiceRequest taskServiceRequest)
     {
         TaskServiceResponse updatedTask = taskService.updateTask(userId, taskServiceRequest);
