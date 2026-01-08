@@ -17,17 +17,32 @@ public class RabbitCommonConfig {
     // User Registration event
     public static final String USER_REGISTERED_ROUTING_KEY = "user.registered";
     public static final String USER_REGISTERED_QUEUE = "user.registered.queue";
+    // User Deletion event
+    public static final String USER_DELETED_QUEUE = "user.deleted.queue";
 
-    /* User Registration */
     @Bean
     public TopicExchange userEventsExchange()
     {
         return ExchangeBuilder.topicExchange(USER_EVENTS_EXCHANGE).durable(true).build();
     }
+    /* User Registration */
     @Bean
     public Queue userRegisteredQueue()
     {
         return new Queue(USER_REGISTERED_QUEUE, true);
+    }
+
+    /* User Deletion */
+    @Bean
+    public Queue userDeletedQueue() {
+        return new Queue(USER_DELETED_QUEUE, true);
+    }
+
+    // Auth service listens to user.deleted event
+    @Bean
+    public Binding bindingUserDeletedQueue(Queue userDeletedQueue, TopicExchange userEventsExchange)
+    {
+        return BindingBuilder.bind(userDeletedQueue).to(userEventsExchange).with("user.deleted");
     }
 
     @Bean
