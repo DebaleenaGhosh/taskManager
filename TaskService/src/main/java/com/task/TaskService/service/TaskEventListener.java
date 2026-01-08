@@ -18,7 +18,7 @@ public class TaskEventListener
     @RabbitListener(queues = RabbitCommonConfig.TASK_USER_EVENTS_QUEUE )
     public void onUserEvent(UserEventDto dto)
     {
-        log.info("Task Service received user event: {} for user {} (ID: {})", dto.getEventType(), dto.getUserName(), dto.getUserId());
+        log.info("Task Service received user event: {} for user ID: {})", dto.getEventType(), dto.getUserId());
 
         // User Created/Registered event
         if (dto.getEventType().contains("CREATED"))

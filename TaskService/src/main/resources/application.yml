@@ -2,7 +2,7 @@ server:
   port: 8083
 spring:
   application:
-    name: Task-Service
+    name: TASK-SERVICE
   main:
     web:
       application:
@@ -24,6 +24,11 @@ spring:
     username: guest
     password: guest
 eureka:
+  client:
+    enabled: true
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
   instance:
-    hostname: localhost   # 👈 force it to register as localhost
     prefer-ip-address: true

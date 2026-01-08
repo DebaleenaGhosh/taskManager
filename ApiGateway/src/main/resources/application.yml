@@ -33,12 +33,16 @@ spring:
       routes:
         - id: auth-service
           uri: http://localhost:8081
+          #http://localhost:8081
+          #lb://AUTH-SERVER            #8081
           predicates:
             - Path=/auth/**
         - id: user-service
           uri: http://localhost:8082
+          #http://localhost:8082
+          #lb://USERPROFILE-SERVICE    #8082
           predicates:
-            - Path=/user/**
+            - Path=/users/**
           filters:
             - name: RemoveRequestHeader
               args:
@@ -49,8 +53,16 @@ spring:
                 value: gateway
         - id: task-service
           uri: http://localhost:8083
+          #http://localhost:8083
+          #lb://TASK-SERVICE   #8083
           predicates:
-            - Path=/task/**
+            - Path=/tasks/**
 eureka:
   client:
-    enabled: false
+    enabled: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.loadbalancer: TRACE

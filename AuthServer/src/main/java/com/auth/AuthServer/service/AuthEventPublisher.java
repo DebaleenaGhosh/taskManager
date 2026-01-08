@@ -27,7 +27,6 @@ public class AuthEventPublisher
                 authUserDto.getUserId(),
                 authUserDto.getUserName(),
                 authUserDto.getEmail(),
-                authUserDto.getPassword(),
                 authUserDto.getRole(),
                 Instant.now());
         rabbitTemplate.convertAndSend(
