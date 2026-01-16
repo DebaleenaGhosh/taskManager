@@ -46,7 +46,8 @@ public class TaskServiceImpl implements TaskService
             /*Publishing the task event after successful save*/
             publisher.publishTaskCreated(converter.convertEntityToDto(savedTask));
 
-            taskServiceResponse.setTitle(taskDto.getTitle())
+            taskServiceResponse
+                    .setTitle(taskDto.getTitle())
                     .setDescription(taskDto.getDescription())
                     .setPriority(taskDto.getPriority())
                     .setStatus(taskDto.getStatus())
@@ -116,7 +117,7 @@ public class TaskServiceImpl implements TaskService
                     .setStatus(String.valueOf(existingTask.getStatus()))
                     .setDueDate(existingTask.getDueDate())
                     .setLastSynced(existingTask.getLastSynced())
-                    .setHttpStatus(HttpStatus.CREATED)
+                    .setHttpStatus(HttpStatus.OK)
                     .setHttpMessage("Task updated successfully");
         }
         catch (RuntimeException exception)
@@ -144,6 +145,7 @@ public class TaskServiceImpl implements TaskService
         List<Task> tasks = taskRepository.findTasksByUserId(userId);
         return tasks.stream()
                 .map(task -> new TaskServiceResponse(
+                        task.getTaskId(),
                         task.getTitle(),
                         task.getDescription(),
                         task.getPriority(),
@@ -167,7 +169,7 @@ public class TaskServiceImpl implements TaskService
                     .setStatus(String.valueOf(task.getStatus()))
                     .setDueDate(task.getDueDate())
                     .setLastSynced(task.getLastSynced())
-                    .setHttpStatus(HttpStatus.FOUND)
+                    .setHttpStatus(HttpStatus.OK)
                     .setHttpMessage("Task fetched successfully");
         }
         catch (TaskNotFoundException taskNotFoundException)

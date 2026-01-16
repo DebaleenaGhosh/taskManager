@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService
                         userProfile.getEmail(),
                         String.valueOf(userProfile.getRole()),
                         userProfile.getTaskCount(),
-                        HttpStatus.FOUND,
+                        HttpStatus.OK,
                         "List of all users fetched"
                 ))
                 .toList();

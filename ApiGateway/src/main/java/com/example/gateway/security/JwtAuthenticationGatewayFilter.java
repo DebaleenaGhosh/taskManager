@@ -18,36 +18,54 @@ public class JwtAuthenticationGatewayFilter
     private static final Logger log =
             LoggerFactory.getLogger(JwtAuthenticationGatewayFilter.class);
 
+    private final JwtUtil jwtUtil;
+
+    public JwtAuthenticationGatewayFilter(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
+
     @Override
     public int getOrder() {
-        return -1; // run before routing
+        return -1;
     }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange,
                              GatewayFilterChain chain) {
 
-        log.info("JwtAuthenticationGatewayFilter invoked");
-
         String path = exchange.getRequest().getURI().getPath();
-        log.info("Request path: {}", path);
 
         if (path.startsWith("/auth")) {
-            log.info("Skipping auth endpoint");
             return chain.filter(exchange);
         }
 
         String authHeader =
                 exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
-        log.info("Authorization header received: {}", authHeader);
-
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
 
-        // TEMP: allow request (we’ll validate token next)
-        return chain.filter(exchange);
+        String token = authHeader.substring(7);
+
+        try {
+            Long userId = jwtUtil.extractUserId(token);
+
+            ServerWebExchange mutatedExchange =
+                    exchange.mutate()
+                            .request(exchange.getRequest()
+                                    .mutate()
+                                    .header("X-User-Id", String.valueOf(userId))
+                                    .build())
+                            .build();
+            log.info("Authenticated userId: {}", userId);
+            return chain.filter(mutatedExchange);
+
+        } catch (Exception ex) {
+            log.error("JWT validation failed", ex);
+            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+            return exchange.getResponse().setComplete();
+        }
     }
 }

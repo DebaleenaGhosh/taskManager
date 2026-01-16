@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class TaskServiceResponse
 {
+    private Long taskId;
     private String title;
     private String description;
     private String priority;
@@ -18,8 +19,9 @@ public class TaskServiceResponse
     private HttpStatus httpStatus;
     private String httpMessage;
 
-    public TaskServiceResponse(String title, String description, String priority, String status, LocalDate dueDate,
+    public TaskServiceResponse(Long taskId, String title, String description, String priority, String status, LocalDate dueDate,
                                LocalDate lastSynced, HttpStatus httpStatus, String httpMessage) {
+        this.taskId = taskId;
         this.title = title;
         this.description = description;
         this.priority = priority;
@@ -28,6 +30,11 @@ public class TaskServiceResponse
         this.lastSynced = lastSynced;
         this.httpStatus = httpStatus;
         this.httpMessage = httpMessage;
+    }
+
+    public TaskServiceResponse setTaskId(Long taskId) {
+        this.taskId = taskId;
+        return this;
     }
 
     public TaskServiceResponse setTitle(String title) {
